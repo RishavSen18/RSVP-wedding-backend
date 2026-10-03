@@ -38,8 +38,7 @@ public class RsvpService {
      */
     public ApiResponse saveRsvp(RsvpRequest request) {
         RsvpResponse entity = new RsvpResponse();
-        entity.setFirstName(request.getFirstName().trim());
-        entity.setLastName(request.getLastName().trim());
+        entity.setFullName(request.getFullName().trim());
         entity.setPhoneNumber(request.getPhoneNumber().trim());
         entity.setAttendance(request.getAttendance());
         
@@ -53,7 +52,7 @@ public class RsvpService {
         entity.setSubmittedAt(LocalDateTime.now());
 
         RsvpResponse saved = rsvpRepository.save(entity);
-        log.info("Saved RSVP response ID: {} for: {} {}", saved.getId(), saved.getFirstName(), saved.getLastName());
+        log.info("Saved RSVP response ID: {} for: {}", saved.getId(), saved.getFullName());
 
         return ApiResponse.ok("RSVP submitted successfully");
     }

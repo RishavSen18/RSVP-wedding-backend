@@ -121,8 +121,7 @@ The backend strictly matches the React RSVP form fields:
 
 | React Form Field Label | Backend Field | Java Type | PostgreSQL Column | Constraints |
 | :--- | :--- | :--- | :--- | :--- |
-| `FIRST NAME · প্রথম নাম` | `firstName` | `String` | `first_name VARCHAR(100)` | Required, Non-blank, Max 100 |
-| `LAST NAME · পদবি / শেষ নাম` | `lastName` | `String` | `last_name VARCHAR(100)` | Required, Non-blank, Max 100 |
+| `FULL NAME · পূর্ণ নাম` | `fullName` | `String` | `full_name VARCHAR(100)` | Required, Non-blank, Max 100 |
 | `PHONE NUMBER · ফোন নম্বর` | `phoneNumber`| `String` | `phone_number VARCHAR(30)` | Required, String format (supports `+91`) |
 | `WILL YOU ATTEND? · আপনার উপস্থিতি` | `attendance` | `AttendanceStatus` | `attendance VARCHAR(30)` | Required Enum (`JOYFULLY_ACCEPT`, `REGRETFULLY_DECLINE`) |
 | `BLESSINGS & MESSAGE · যুগলের উদ্দেশ্য আশীর্বাদ ও বার্তা` | `message` | `String` | `message TEXT` | Optional, Max 1000 characters |
@@ -154,8 +153,7 @@ The backend strictly matches the React RSVP form fields:
 * **Request Body**:
 ```json
 {
-  "firstName": "Subhashish",
-  "lastName": "Mukherjee",
+  "fullName": "Subhashish Mukherjee",
   "phoneNumber": "+919830000000",
   "attendance": "JOYFULLY_ACCEPT",
   "message": "Wishing you both a beautiful life together!"
@@ -176,7 +174,7 @@ The backend strictly matches the React RSVP form fields:
 ```json
 {
   "success": false,
-  "message": "First name is required"
+  "message": "Full name is required"
 }
 ```
 
@@ -192,8 +190,7 @@ The backend strictly matches the React RSVP form fields:
 [
   {
     "id": 5,
-    "firstName": "Subhashish",
-    "lastName": "Mukherjee",
+    "fullName": "Subhashish Mukherjee",
     "phoneNumber": "+919830000000",
     "attendance": "JOYFULLY_ACCEPT",
     "message": "Wishing you both a beautiful life together!",
@@ -201,8 +198,7 @@ The backend strictly matches the React RSVP form fields:
   },
   {
     "id": 4,
-    "firstName": "Example",
-    "lastName": "Guest",
+    "fullName": "Example Guest",
     "phoneNumber": "+919812345678",
     "attendance": "REGRETFULLY_DECLINE",
     "message": "Congratulations to you both.",
@@ -221,8 +217,7 @@ The backend strictly matches the React RSVP form fields:
 ```json
 {
   "id": 5,
-  "firstName": "Subhashish",
-  "lastName": "Mukherjee",
+  "fullName": "Subhashish Mukherjee",
   "phoneNumber": "+919830000000",
   "attendance": "JOYFULLY_ACCEPT",
   "message": "Wishing you both a beautiful life together!",
@@ -274,8 +269,7 @@ async function submitRsvp(formData) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      firstName: formData.firstName,
-      lastName: formData.lastName,
+      fullName: formData.fullName,
       phoneNumber: formData.phoneNumber,
       attendance: formData.willAttend ? 'JOYFULLY_ACCEPT' : 'REGRETFULLY_DECLINE',
       message: formData.message || null,

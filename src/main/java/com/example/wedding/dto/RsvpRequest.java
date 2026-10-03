@@ -8,11 +8,10 @@ import jakarta.validation.constraints.Size;
 
 /**
  * Incoming request DTO for guest RSVP submission.
- * Captures firstName and lastName separately.
+ * Matches the fields of the React RSVP form.
  * 
  * Strict constraints:
- * - firstName is required and non-blank.
- * - lastName is required and non-blank.
+ * - fullName is required and non-blank.
  * - phoneNumber is stored as a String (accepting +91, leading zeros, dashes).
  * - attendance must be either JOYFULLY_ACCEPT or REGRETFULLY_DECLINE.
  * - message is optional with reasonable max length.
@@ -21,13 +20,9 @@ import jakarta.validation.constraints.Size;
  */
 public class RsvpRequest {
 
-    @NotBlank(message = "First name is required")
-    @Size(max = 100, message = "First name must not exceed 100 characters")
-    private String firstName;
-
-    @NotBlank(message = "Last name is required")
-    @Size(max = 100, message = "Last name must not exceed 100 characters")
-    private String lastName;
+    @NotBlank(message = "Full name is required")
+    @Size(max = 100, message = "Full name must not exceed 100 characters")
+    private String fullName;
 
     @NotBlank(message = "Phone number is required")
     @Size(max = 30, message = "Phone number must not exceed 30 characters")
@@ -46,28 +41,19 @@ public class RsvpRequest {
     public RsvpRequest() {
     }
 
-    public RsvpRequest(String firstName, String lastName, String phoneNumber, AttendanceStatus attendance, String message) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public RsvpRequest(String fullName, String phoneNumber, AttendanceStatus attendance, String message) {
+        this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.attendance = attendance;
         this.message = message;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getPhoneNumber() {
