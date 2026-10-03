@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 public class RsvpResponseDto {
 
     private Long id;
-    private String fullName;
+    private String firstName;
+    private String lastName;
     private String phoneNumber;
     private AttendanceStatus attendance;
     private String message;
@@ -21,9 +22,10 @@ public class RsvpResponseDto {
     public RsvpResponseDto() {
     }
 
-    public RsvpResponseDto(Long id, String fullName, String phoneNumber, AttendanceStatus attendance, String message, LocalDateTime submittedAt) {
+    public RsvpResponseDto(Long id, String firstName, String lastName, String phoneNumber, AttendanceStatus attendance, String message, LocalDateTime submittedAt) {
         this.id = id;
-        this.fullName = fullName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.attendance = attendance;
         this.message = message;
@@ -36,7 +38,8 @@ public class RsvpResponseDto {
         }
         return new RsvpResponseDto(
                 entity.getId(),
-                entity.getFullName(),
+                entity.getFirstName(),
+                entity.getLastName(),
                 entity.getPhoneNumber(),
                 entity.getAttendance(),
                 entity.getMessage(),
@@ -52,12 +55,20 @@ public class RsvpResponseDto {
         this.id = id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPhoneNumber() {

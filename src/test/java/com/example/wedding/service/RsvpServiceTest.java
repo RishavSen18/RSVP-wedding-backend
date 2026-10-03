@@ -32,10 +32,11 @@ class RsvpServiceTest {
     private RsvpService rsvpService;
 
     @Test
-    @DisplayName("saveRsvp should persist entity and return success ApiResponse")
+    @DisplayName("saveRsvp should persist entity with firstName and lastName and return success ApiResponse")
     void saveRsvp_success() {
         RsvpRequest request = new RsvpRequest(
-                "Subhashish Mukherjee",
+                "Subhashish",
+                "Mukherjee",
                 "+919830000000",
                 AttendanceStatus.JOYFULLY_ACCEPT,
                 "Blessings to the couple!"
@@ -43,7 +44,8 @@ class RsvpServiceTest {
 
         RsvpResponse savedEntity = new RsvpResponse(
                 1L,
-                "Subhashish Mukherjee",
+                "Subhashish",
+                "Mukherjee",
                 "+919830000000",
                 AttendanceStatus.JOYFULLY_ACCEPT,
                 "Blessings to the couple!",
@@ -61,33 +63,36 @@ class RsvpServiceTest {
     }
 
     @Test
-    @DisplayName("getAllResponses should return mapped DTOs ordered by repository")
+    @DisplayName("getAllResponses should return mapped DTOs with firstName and lastName")
     void getAllResponses_success() {
-        RsvpResponse r1 = new RsvpResponse(1L, "Guest One", "+919800000001", AttendanceStatus.JOYFULLY_ACCEPT, null, LocalDateTime.now());
-        RsvpResponse r2 = new RsvpResponse(2L, "Guest Two", "+919800000002", AttendanceStatus.REGRETFULLY_DECLINE, "Best wishes", LocalDateTime.now().minusHours(1));
+        RsvpResponse r1 = new RsvpResponse(1L, "Guest", "One", "+919800000001", AttendanceStatus.JOYFULLY_ACCEPT, null, LocalDateTime.now());
+        RsvpResponse r2 = new RsvpResponse(2L, "Guest", "Two", "+919800000002", AttendanceStatus.REGRETFULLY_DECLINE, "Best wishes", LocalDateTime.now().minusHours(1));
 
         when(rsvpRepository.findAllByOrderBySubmittedAtDesc()).thenReturn(List.of(r1, r2));
 
         List<RsvpResponseDto> dtos = rsvpService.getAllResponses();
 
         assertEquals(2, dtos.size());
-        assertEquals("Guest One", dtos.get(0).getFullName());
+        assertEquals("Guest", dtos.get(0).getFirstName());
+        assertEquals("One", dtos.get(0).getLastName());
         assertEquals(AttendanceStatus.JOYFULLY_ACCEPT, dtos.get(0).getAttendance());
-        assertEquals("Guest Two", dtos.get(1).getFullName());
+        assertEquals("Guest", dtos.get(1).getFirstName());
+        assertEquals("Two", dtos.get(1).getLastName());
         assertEquals("Best wishes", dtos.get(1).getMessage());
     }
 
     @Test
     @DisplayName("getResponseById should return DTO when found")
     void getResponseById_found() {
-        RsvpResponse r = new RsvpResponse(5L, "Arindam", "+919812345678", AttendanceStatus.JOYFULLY_ACCEPT, "See you there", LocalDateTime.now());
+        RsvpResponse r = new RsvpResponse(5L, "Arindam", "Chatterjee", "+919812345678", AttendanceStatus.JOYFULLY_ACCEPT, "See you there", LocalDateTime.now());
         when(rsvpRepository.findById(5L)).thenReturn(Optional.of(r));
 
         RsvpResponseDto dto = rsvpService.getResponseById(5L);
 
         assertNotNull(dto);
         assertEquals(5L, dto.getId());
-        assertEquals("Arindam", dto.getFullName());
+        assertEquals("Arindam", dto.getFirstName());
+        assertEquals("Chatterjee", dto.getLastName());
     }
 
     @Test

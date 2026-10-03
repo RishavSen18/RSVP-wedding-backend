@@ -152,7 +152,8 @@ export default function App() {
                   Accepts RSVP submission from React form. Automatically generates <code className="text-emerald-300">submittedAt</code> timestamp. Returns 201 Created without leaking private guest record.
                 </p>
                 <div className="text-xs text-slate-400 flex flex-wrap gap-2 pt-1">
-                  <span className="bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700/60">fullName (required)</span>
+                  <span className="bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700/60">firstName (required)</span>
+                  <span className="bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700/60">lastName (required)</span>
                   <span className="bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700/60">phoneNumber (required String)</span>
                   <span className="bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700/60">attendance (Enum)</span>
                   <span className="bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700/60">message (optional)</span>
@@ -180,7 +181,7 @@ export default function App() {
               </div>
               <div className="bg-slate-950 p-3 rounded font-mono text-xs text-slate-300 border border-slate-800 min-w-[280px]">
                 <div className="text-slate-500 mb-1">// Array of RsvpResponseDto</div>
-                {`[\n  {\n    "id": 1,\n    "fullName": "Subhashish Mukherjee",\n    "phoneNumber": "+919830000000",\n    "attendance": "JOYFULLY_ACCEPT",\n    "submittedAt": "2026-10-02T14:40:00"\n  }\n]`}
+                {`[\n  {\n    "id": 1,\n    "firstName": "Subhashish",\n    "lastName": "Mukherjee",\n    "phoneNumber": "+919830000000",\n    "attendance": "JOYFULLY_ACCEPT",\n    "submittedAt": "2026-10-02T14:40:00"\n  }\n]`}
               </div>
             </div>
 
@@ -228,8 +229,13 @@ export default function App() {
             </h3>
             <div className="space-y-3 text-xs">
               <div className="p-3 bg-slate-950 rounded-lg border border-slate-800/80">
-                <div className="text-slate-400 font-medium">FULL NAME · পূর্ণ নাম</div>
-                <div className="font-mono text-emerald-300 mt-1">String fullName (Required, non-blank)</div>
+                <div className="text-slate-400 font-medium">FIRST NAME · প্রথম নাম</div>
+                <div className="font-mono text-emerald-300 mt-1">String firstName (Required, non-blank)</div>
+              </div>
+
+              <div className="p-3 bg-slate-950 rounded-lg border border-slate-800/80">
+                <div className="text-slate-400 font-medium">LAST NAME · পদবি / শেষ নাম</div>
+                <div className="font-mono text-emerald-300 mt-1">String lastName (Required, non-blank)</div>
               </div>
 
               <div className="p-3 bg-slate-950 rounded-lg border border-slate-800/80">
@@ -272,7 +278,8 @@ export default function App() {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      fullName: form.fullName,
+      firstName: form.firstName,
+      lastName: form.lastName,
       phoneNumber: form.phoneNumber,
       attendance: form.willAttend ? 'JOYFULLY_ACCEPT' : 'REGRETFULLY_DECLINE',
       message: form.message || null
@@ -297,7 +304,8 @@ export default function App() {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      fullName: form.fullName,
+      firstName: form.firstName,
+      lastName: form.lastName,
       phoneNumber: form.phoneNumber,
       attendance: form.willAttend 
         ? 'JOYFULLY_ACCEPT' 

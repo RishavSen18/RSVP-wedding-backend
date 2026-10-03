@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 /**
  * JPA Entity mapping to the PostgreSQL 'rsvp_responses' table.
- * Contains only the required fields: fullName, phoneNumber, attendance, optional message,
+ * Contains: firstName, lastName, phoneNumber, attendance, optional message,
  * and the backend-generated submittedAt timestamp.
  * 
  * Strict requirement: NO email, NO guest_count, NO number_of_guests.
@@ -18,8 +18,11 @@ public class RsvpResponse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "full_name", nullable = false, length = 100)
-    private String fullName;
+    @Column(name = "first_name", nullable = false, length = 100)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false, length = 100)
+    private String lastName;
 
     @Column(name = "phone_number", nullable = false, length = 30)
     private String phoneNumber;
@@ -37,17 +40,19 @@ public class RsvpResponse {
     public RsvpResponse() {
     }
 
-    public RsvpResponse(String fullName, String phoneNumber, AttendanceStatus attendance, String message) {
-        this.fullName = fullName;
+    public RsvpResponse(String firstName, String lastName, String phoneNumber, AttendanceStatus attendance, String message) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.attendance = attendance;
         this.message = message;
         this.submittedAt = LocalDateTime.now();
     }
 
-    public RsvpResponse(Long id, String fullName, String phoneNumber, AttendanceStatus attendance, String message, LocalDateTime submittedAt) {
+    public RsvpResponse(Long id, String firstName, String lastName, String phoneNumber, AttendanceStatus attendance, String message, LocalDateTime submittedAt) {
         this.id = id;
-        this.fullName = fullName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.attendance = attendance;
         this.message = message;
@@ -69,12 +74,20 @@ public class RsvpResponse {
         this.id = id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPhoneNumber() {
@@ -113,7 +126,8 @@ public class RsvpResponse {
     public String toString() {
         return "RsvpResponse{" +
                 "id=" + id +
-                ", fullName='" + fullName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", attendance=" + attendance +
                 ", message='" + (message != null ? message.substring(0, Math.min(message.length(), 20)) + "..." : "null") + '\'' +

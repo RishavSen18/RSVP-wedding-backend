@@ -42,11 +42,12 @@ class RsvpControllerTest {
     class PostRsvpTests {
 
         @Test
-        @DisplayName("Should successfully create RSVP with valid data")
+        @DisplayName("Should successfully create RSVP with valid firstName and lastName")
         void submitRsvp_validRequest() throws Exception {
             String payload = """
                 {
-                    "fullName": "Subhashish Mukherjee",
+                    "firstName": "Subhashish",
+                    "lastName": "Mukherjee",
                     "phoneNumber": "+919830000000",
                     "attendance": "JOYFULLY_ACCEPT",
                     "message": "Wishing you both a lifetime of happiness!"
@@ -66,7 +67,8 @@ class RsvpControllerTest {
         void submitRsvp_optionalMessageOmitted() throws Exception {
             String payload = """
                 {
-                    "fullName": "Priya Banerjee",
+                    "firstName": "Priya",
+                    "lastName": "Banerjee",
                     "phoneNumber": "+919831112233",
                     "attendance": "REGRETFULLY_DECLINE"
                 }
@@ -81,11 +83,12 @@ class RsvpControllerTest {
         }
 
         @Test
-        @DisplayName("Should fail when fullName is missing or blank")
-        void submitRsvp_missingFullName() throws Exception {
+        @DisplayName("Should fail when firstName is missing or blank")
+        void submitRsvp_missingFirstName() throws Exception {
             String payload = """
                 {
-                    "fullName": "",
+                    "firstName": "",
+                    "lastName": "Mukherjee",
                     "phoneNumber": "+919830000000",
                     "attendance": "JOYFULLY_ACCEPT"
                 }
@@ -96,7 +99,27 @@ class RsvpControllerTest {
                             .content(payload))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.success").value(false))
-                    .andExpect(jsonPath("$.message", containsString("Full name is required")));
+                    .andExpect(jsonPath("$.message", containsString("First name is required")));
+        }
+
+        @Test
+        @DisplayName("Should fail when lastName is missing or blank")
+        void submitRsvp_missingLastName() throws Exception {
+            String payload = """
+                {
+                    "firstName": "Subhashish",
+                    "lastName": "  ",
+                    "phoneNumber": "+919830000000",
+                    "attendance": "JOYFULLY_ACCEPT"
+                }
+                """;
+
+            mockMvc.perform(post("/api/rsvp")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(payload))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.success").value(false))
+                    .andExpect(jsonPath("$.message", containsString("Last name is required")));
         }
 
         @Test
@@ -104,7 +127,8 @@ class RsvpControllerTest {
         void submitRsvp_missingPhoneNumber() throws Exception {
             String payload = """
                 {
-                    "fullName": "Amitabh Sen",
+                    "firstName": "Amitabh",
+                    "lastName": "Sen",
                     "phoneNumber": "   ",
                     "attendance": "JOYFULLY_ACCEPT"
                 }
@@ -122,7 +146,8 @@ class RsvpControllerTest {
         void submitRsvp_missingAttendance() throws Exception {
             String payload = """
                 {
-                    "fullName": "Ananya Roy",
+                    "firstName": "Ananya",
+                    "lastName": "Roy",
                     "phoneNumber": "+919830000000"
                 }
                 """;
@@ -139,7 +164,8 @@ class RsvpControllerTest {
         void submitRsvp_invalidAttendance() throws Exception {
             String payload = """
                 {
-                    "fullName": "Rohit Das",
+                    "firstName": "Rohit",
+                    "lastName": "Das",
                     "phoneNumber": "+919830000000",
                     "attendance": "MAYBE_LATER"
                 }
@@ -171,7 +197,8 @@ class RsvpControllerTest {
         void getAllRsvps_multipleResponses_orderedNewestFirst() throws Exception {
             // Older submission
             RsvpResponse first = new RsvpResponse();
-            first.setFullName("Older Guest");
+            first.setFirstName("Older");
+            first.setLastName("Guest");
             first.setPhoneNumber("+919811111111");
             first.setAttendance(AttendanceStatus.REGRETFULLY_DECLINE);
             first.setMessage("Warm wishes");
@@ -180,7 +207,8 @@ class RsvpControllerTest {
 
             // Newer submission
             RsvpResponse second = new RsvpResponse();
-            second.setFullName("Newer Guest");
+            second.setFirstName("Newer");
+            second.setLastName("Guest");
             second.setPhoneNumber("+919822222222");
             second.setAttendance(AttendanceStatus.JOYFULLY_ACCEPT);
             second.setMessage("Cannot wait to celebrate!");
@@ -190,9 +218,11 @@ class RsvpControllerTest {
             mockMvc.perform(get("/api/rsvp"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$", hasSize(2)))
-                    .andExpect(jsonPath("$[0].fullName").value("Newer Guest"))
+                    .andExpect(jsonPath("$[0].firstName").value("Newer"))
+                    .andExpect(jsonPath("$[0].lastName").value("Guest"))
                     .andExpect(jsonPath("$[0].attendance").value("JOYFULLY_ACCEPT"))
-                    .andExpect(jsonPath("$[1].fullName").value("Older Guest"))
+                    .andExpect(jsonPath("$[1].firstName").value("Older"))
+                    .andExpect(jsonPath("$[1].lastName").value("Guest"))
                     .andExpect(jsonPath("$[1].attendance").value("REGRETFULLY_DECLINE"));
         }
     }
@@ -205,7 +235,8 @@ class RsvpControllerTest {
         @DisplayName("Should return response when ID exists")
         void getRsvpById_existingResponse() throws Exception {
             RsvpResponse saved = new RsvpResponse();
-            saved.setFullName("Sourav Ganguly");
+            saved.setFirstName("Sourav");
+            saved.setLastName("Ganguly");
             saved.setPhoneNumber("+919830099999");
             saved.setAttendance(AttendanceStatus.JOYFULLY_ACCEPT);
             saved.setMessage("All the best!");
@@ -215,7 +246,8 @@ class RsvpControllerTest {
             mockMvc.perform(get("/api/rsvp/{id}", saved.getId()))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").value(saved.getId()))
-                    .andExpect(jsonPath("$.fullName").value("Sourav Ganguly"))
+                    .andExpect(jsonPath("$.firstName").value("Sourav"))
+                    .andExpect(jsonPath("$.lastName").value("Ganguly"))
                     .andExpect(jsonPath("$.phoneNumber").value("+919830099999"))
                     .andExpect(jsonPath("$.attendance").value("JOYFULLY_ACCEPT"))
                     .andExpect(jsonPath("$.message").value("All the best!"))
@@ -240,7 +272,8 @@ class RsvpControllerTest {
         @DisplayName("Should successfully delete existing response")
         void deleteRsvp_existingResponse() throws Exception {
             RsvpResponse saved = new RsvpResponse();
-            saved.setFullName("Debashis Chatterjee");
+            saved.setFirstName("Debashis");
+            saved.setLastName("Chatterjee");
             saved.setPhoneNumber("+919830055555");
             saved.setAttendance(AttendanceStatus.JOYFULLY_ACCEPT);
             saved.setSubmittedAt(LocalDateTime.now());
